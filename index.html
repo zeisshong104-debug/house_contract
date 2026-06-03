@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>【閱讀台灣】房屋及土地預定買賣契約書暨差異對照表</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            transition: font-size 0.2s ease;
+        }
+        
+        .contract-text {
+            font-family: 'Noto Serif TC', serif;
+            line-height: 1.8;
+            letter-spacing: 0.03em;
+        }
+
+        /* 調整合約中填空或底線的樣式 */
+        .contract-underline {
+            border-bottom: 2px solid #4b5563;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-weight: 500;
+            color: #111827;
+        }
+
+        /* 側邊欄與捲動條美化 */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* 差異化標記 */
+        .diff-del {
+            background-color: #fee2e2;
+            text-decoration: line-through;
+            color: #991b1b;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        .diff-ins {
+            background-color: #dcfce7;
+            color: #166534;
+            font-weight: 600;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        /* 搜尋高亮 */
+        .search-highlight {
+            background-color: #fef08a;
+            color: #000;
+            font-weight: bold;
+            border-bottom: 2px solid #eab308;
+        }
+
+        /* 平滑捲動 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 頁籤隱藏與顯示 */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="text-sm md:text-base">
+
+    <!-- 頂部固定導覽列與工具列 -->
+    <header class="sticky top-0 z-50 bg-slate-900 text-white shadow-md border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 text-white p-2 rounded-lg font-bold text-xs tracking-wider">閱台</div>
+                <div>
+                    <h1 class="font-bold text-base md:text-lg tracking-tight">『閱讀台灣』預定買賣契約書</h1>
+                    <p class="text-xs text-slate-400 hidden sm:block">完整審閱本 暨 0813條文差異化對照系統</p>
+                </div>
+            </div>
+            
+            <!-- 即時工具箱 -->
+            <div class="flex items-center space-x-2 md:space-x-4">
+                <!-- 搜尋框 -->
+                <div class="relative">
+                    <input type="text" id="searchInput" placeholder="搜尋合約關鍵字..." 
+                           class="bg-slate-800 text-slate-200 pl-3 pr-8 py-1.5 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-blue-500 w-36 sm:w-48 transition-all">
+                    <button onclick="performSearch()" class="absolute right-2 top-2 text-slate-400 hover:text-white">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    </button>
+                </div>
+                
+                <!-- 字型縮放 -->
+                <div class="flex bg-slate-800 rounded-md p-0.5 border border-slate-700 text-xs">
+                    <button onclick="changeFontSize(-1)" class="px-2 py-1 text-slate-300 hover:text-white font-medium" title="縮小字體">A-</button>
+                    <button onclick="resetFontSize()" class="px-2 py-1 text-slate-400 hover:text-white border-x border-slate-700" title="還原大小">100%</button>
+                    <button onclick="changeFontSize(1)" class="px-2 py-1 text-slate-300 hover:text-white font-medium" title="放大字體">A+</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 核心 Tab 切換按鈕 -->
+        <div class="bg-slate-800 border-t border-slate-700">
+            <div class="max-w-7xl mx-auto flex">
+                <button onclick="switchTab('house-tab', this)" class="tab-btn flex-1 py-3 text-center text-sm font-bold border-b-2 border-blue-500 text-white bg-slate-900/50 focus:outline-none transition-all">
+                    🏢 房屋預定買賣契約書 暨 建材對照
+                </button>
+                <button onclick="switchTab('land-tab', this)" class="tab-btn flex-1 py-3 text-center text-sm font-bold border-b-2 border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-700/50 focus:outline-none transition-all">
+                    🗺️ 土地預定買賣契約書
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主框架排版：側邊欄導覽 + 右側內文 -->
+    <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-6">
+        
+        <!-- 側邊動態目錄列 (隨 Tab 連動切換) -->
+        <aside class="w-full lg:w-64 shrink-0 lg:sticky lg:top-36 lg:h-[calc(100vh-11rem)] overflow-y-auto bg-white rounded-xl border border-slate-200 p-4 custom-scrollbar shadow-sm">
+            
+            <!-- 房屋合約目錄 -->
+            <div id="house-toc" class="space-y-1">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">房屋合約章節</p>
+                <a href="#h-review" class="block px-2 py-1.5 text-slate-700 rounded hover:bg-blue-50 hover:text-blue-700 font-medium transition-colors">第一條：契約審閱期</a>
+                <a href="#h-ad" class="block px-2 py-1.5 text-slate-700 rounded hover:bg-blue-50 hover:text-blue-700 font-medium transition-colors">第二條：賣方對廣告之義務</a>
+                <a href="#h-prop" class="block px-2 py-1.5 text-slate-700 rounded hover:bg-blue-50 hover:text-blue-700 font-medium transition-colors">第三條：預定買賣標示及規格</a>
+                <a href="#h-price" class="block px-2 py-1.5 text-slate-700 rounded hover:bg-blue-50 hover:text-blue-700 font-medium transition-colors">第四條：房地總價款金額明細</a>
+                <a href="#h-diff-title" class="block px-2 py-1.5 bg-blue-50 text-blue-800 rounded font-bold border-l-4 border-blue-600 mt-4 pl-2">🛠️ 附件：建材設備差異比對</a>
+                <div class="pl-2 border-l border-slate-200 ml-2 space-y-1 mt-1 text-xs">
+                    <a href="#diff-elevator" class="block px-2 py-1 text-slate-600 hover:text-blue-600 hover:underline">(一) 電梯設備變更</a>
+                    <a href="#diff-roof" class="block px-2 py-1 text-slate-600 hover:text-blue-600 hover:underline">(二) 露台、屋頂建材</a>
+                    <a href="#diff-window" class="block px-2 py-1 text-slate-600 hover:text-blue-600 hover:underline">(三) 門窗與玻璃規格</a>
+                    <a href="#diff-interior" class="block px-2 py-1 text-slate-600 hover:text-blue-600 hover:underline">(四) 室內裝修及隔間</a>
+                    <a href="#diff-balcony" class="block px-2 py-1 text-slate-600 hover:text-blue-600 hover:underline">(五) 陽台止滑磚尺寸</a>
+                    <a href="#diff-plumbing" class="block px-2 py-1 text-slate-600 hover:text-blue-600 hover:underline">(六) 給排水與不銹鋼管</a>
+                    <a href="#diff-security" class="block px-2 py-1 text-slate-600 hover:text-blue-600 hover:underline">(七) 安全管理對講機</a>
+                </div>
+            </div>
+
+            <!-- 土地合約目錄 (預設隱藏) -->
+            <div id="land-toc" class="space-y-1 hidden">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">土地合約章節</p>
+                <a href="#l-review" class="block px-2 py-1.5 text-slate-700 rounded hover:bg-blue-50 hover:text-blue-700 font-medium transition-colors">第一條：契約審閱權限</a>
+                <a href="#l-prop" class="block px-2 py-1.5 text-slate-700 rounded hover:bg-blue-50 hover:text-blue-700 font-medium transition-colors">第二條：土地預定買賣標示</a>
+                <a href="#l-area" class="block px-2 py-1.5 text-slate-700 rounded hover:bg-blue-50 hover:text-blue-700 font-medium transition-colors">第三條：地籍重測與土地面積變更</a>
+                <a href="#l-diff" class="block px-2 py-1.5 bg-emerald-50 text-emerald-800 rounded font-bold border-l-4 border-emerald-600 mt-4 pl-2">🛠️ 附件：土地持有人變更</a>
+            </div>
+        </aside>
+
+        <!-- 右側內文區 -->
+        <main class="flex-1 bg-white rounded-xl border border-slate-200 p-6 md:p-8 shadow-sm">
+            
+            <!-- SEARCH ALERT BANNER -->
+            <div id="searchAlert" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-lg text-xs flex justify-between items-center">
+                <span>⚠️ 若找不到關鍵字，請嘗試切換上方的「房屋」或「土地」契約分頁再搜尋一次。</span>
+                <button onclick="document.getElementById('searchAlert').classList.add('hidden')" class="font-bold">&times;</button>
+            </div>
+
+            <!-- ======================================================= -->
+            <!-- TAB 1: 房屋預定買賣契約書 -->
+            <!-- ======================================================= -->
+            <div id="house-tab" class="tab-content active space-y-8">
+                <div class="border-b-2 border-slate-100 pb-4">
+                    <h2 class="text-2xl font-bold text-slate-800">房屋預定買賣契約書</h2>
+                    <p class="text-slate-500 mt-1 text-xs">立契約書人：買方（以下簡稱買方）/ 賣方：丞石建築開發有限公司（以下簡稱賣方）</p>
+                </div>
+
+                <!-- 第一條 -->
+                <section id="h-review" class="scroll-mt-36">
+                    <h3 class="text-base font-bold text-slate-900 border-l-4 border-blue-600 pl-2 mb-3">第一條：契約審閱期</h3>
+                    <div class="contract-text text-slate-700 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        本契約於中華民國 <span class="contract-underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 年 <span class="contract-underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 月 <span class="contract-underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 日經買方攜回審閱 <span class="contract-underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 日（契約審閱期間不得少於五日），經雙方協商後合意訂定條款如下，以資共同遵守：
+                        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs border-t border-slate-200 pt-3 text-slate-500">
+                            <div>【買方簽章：<span class="contract-underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>】</div>
+                            <div>【賣方簽章：丞石建築開發有限公司 法定代理人：彭智祺】</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 第二條 -->
+                <section id="h-ad" class="scroll-mt-36">
+                    <h3 class="text-base font-bold text-slate-900 border-l-4 border-blue-600 pl-2 mb-3">第二條：賣方對廣告之義務</h3>
+                    <div class="contract-text text-slate-700">
+                        賣方應確保廣告內容之真實，本社區預售屋之廣告宣傳品及其所記載之建材設備說明、房屋及停車位平面配置圖與位置示意圖，皆為本契約之一部分。
+                    </div>
+                </section>
+
+                <!-- 第三條 -->
+                <section id="h-prop" class="scroll-mt-36">
+                    <h3 class="text-base font-bold text-slate-900 border-l-4 border-blue-600 pl-2 mb-3">第三條：預定買賣標示及停車位規格</h3>
+                    <div class="contract-text text-slate-700 space-y-2">
+                        <p><strong>一、土地座落：</strong></p>
+                        <p class="pl-4 text-slate-600">新北市泰山區信華段五小段43、43-1、43-2、46、47、48、49、50、51、59、60、60-1地號等12筆土地，使用分區為都市計畫內第三種住宅區，面積為6462.77平方公尺（計1954.99坪）。如因土地分割、合併或地籍圖重測，則依新地政事務所登記面積為準。</p>
+                        <p><strong>二、房屋結構與權利範圍：</strong></p>
+                        <p class="pl-4 text-slate-600">本建案定名為『閱讀台灣』。主要結構為鋼筋混凝土（RC），地上結構物設計及建材悉依工務主管機關核准之圖說施作。</p>
+                    </div>
+                </section>
+
+                <!-- 第四條 -->
+                <section id="h-price" class="scroll-mt-36">
+                    <h3 class="text-base font-bold text-slate-900 border-l-4 border-blue-600 pl-2 mb-3">第四條：房地總價款金額明細</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse border border-slate-200 text-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-700">
+                                    <th class="border border-slate-200 p-2.5">款項類別</th>
+                                    <th class="border border-slate-200 p-2.5">金額（新台幣）</th>
+                                    <th class="border border-slate-200 p-2.5">備註</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="border border-slate-200 p-2.5 font-medium">土地總價</td>
+                                    <td class="border border-slate-200 p-2.5"><span class="contract-underline">依土地契約所載為準</span></td>
+                                    <td class="border border-slate-200 p-2.5 text-slate-500">分戶與房屋價金成特定比例</td>
+                                </tr>
+                                <tr class="bg-slate-50/50">
+                                    <td class="border border-slate-200 p-2.5 font-medium">房屋總價（含主建物、附屬建物）</td>
+                                    <td class="border border-slate-200 p-2.5">新台幣 <span class="contract-underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 元整</td>
+                                    <td class="border border-slate-200 p-2.5 text-slate-500">內含內牆、機電與公設持分</td>
+                                </tr>
+                                <tr>
+                                    <td class="border border-slate-200 p-2.5 font-medium">車位總價</td>
+                                    <td class="border border-slate-200 p-2.5">新台幣 <span class="contract-underline">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 元整</td>
+                                    <td class="border border-slate-200 p-2.5 text-slate-500">法定/增設停車位規格另載</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- 房屋合約差異化對照表區區 -->
+                <div id="h-diff-title" class="pt-8 border-t-2 border-slate-200">
+                    <div class="bg-amber-50 border border-amber-200 p-4 rounded-xl mb-6">
+                        <h4 class="font-bold text-amber-900 flex items-center gap-2 text-base">
+                            💡 0813房屋契約差異化對照與建材變更說明
+                        </h4>
+                        <p class="text-xs text-amber-700 mt-1 leading-relaxed">
+                            本區塊為「0813合約差異化對照表」針對房屋合約【附件二：建材及設備說明】之變更對照。紅色代表刪除文字、綠色底代表最新修正簽訂條文，並附帶建案工程修正事由。
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 差異對照明細（一） -->
+                <section id="diff-elevator" class="scroll-mt-36 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-slate-800 text-white px-4 py-2.5 flex justify-between items-center text-xs md:text-sm">
+                        <span class="font-bold">(一) 電梯設備變更對照</span>
+                        <span class="bg-slate-700 px-2 py-0.5 rounded text-[11px]">附件二 第1頁</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                        <!-- 修正前 -->
+                        <div class="p-4 bg-slate-50/50">
+                            <span class="block text-xs font-bold text-slate-400 mb-2 uppercase tracking-wide">原審閱本條文</span>
+                            <div class="contract-text text-slate-600 text-sm">
+                                一、電梯採用富士達或三菱或永大電梯，本社區電梯為交流變壓變頻電梯，一樓大廳一部公設使用電梯可承載13人份，<span class="diff-del">兩幢每幢二部可承載17人份，速度120M/MIN，</span>設定樓層感應識別系統、微電腦智慧型控制廂門開關時間，照明燈、通風扇、電梯停電時自動切換至緊急電源、光幕防夾功能及錯按取消功能、IONFUL離子除菌裝置。
+                            </div>
+                        </div>
+                        <!-- 修正後 -->
+                        <div class="p-4">
+                            <span class="block text-xs font-bold text-blue-600 mb-2 uppercase tracking-wide">■ 最終簽訂條文</span>
+                            <div class="contract-text text-slate-800 text-sm">
+                                一、電梯採用富士達或三菱或永大電梯，本社區電梯為交流變壓變頻電梯，<span class="diff-ins">一樓大廳一部公設使用電梯可承載13人份，速度45M/MIN，兩幢每幢二部可承載17人份，速度120M/MIN，</span>設定樓層感應識別系統、微電腦智慧型控制廂門開關時間，照明燈、通風扇、電梯停電時自動切換至緊急電源、光幕防夾功能及錯按取消功能、IONFUL離子除菌裝置。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50/70 px-4 py-2.5 border-t border-slate-200 text-xs text-amber-800 flex items-start gap-2">
+                        <span class="bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded scale-90">事由</span>
+                        <p class="font-medium">明確增列一樓大廳公設電梯之速度 (45M/MIN) 與兩幢大樓電梯規格比對，以便規格清晰。</p>
+                    </div>
+                </section>
+
+                <!-- 差異對照明細（二） -->
+                <section id="diff-roof" class="scroll-mt-36 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-slate-800 text-white px-4 py-2.5 flex justify-between items-center text-xs md:text-sm">
+                        <span class="font-bold">(二) 露台、屋頂平台防水對照</span>
+                        <span class="bg-slate-700 px-2 py-0.5 rounded text-[11px]">附件二 第2頁</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                        <div class="p-4 bg-slate-50/50">
+                            <span class="block text-xs font-bold text-slate-400 mb-2">原審閱本條文</span>
+                            <div class="contract-text text-slate-600 text-sm">
+                                一、露台及屋頂平台採用大信格雷盾防水處理，加PS板保護層，<span class="diff-del">地坪依景觀設計舖設室外隔熱磚。</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <span class="block text-xs font-bold text-blue-600 mb-2">■ 最終簽訂條文</span>
+                            <div class="contract-text text-slate-800 text-sm">
+                                一、露台及屋頂平台採用大信格雷盾防水處理，加PS板保護層，<span class="diff-ins">露台地坪舖設 20cm×20cm 止滑磁磚，屋頂平台依景觀設計舖設室外隔熱磚。</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50/70 px-4 py-2.5 border-t border-slate-200 text-xs text-amber-800 flex items-start gap-2">
+                        <span class="bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded scale-90">事由</span>
+                        <p class="font-medium">明確標示露台地坪尺寸與止滑規格，保障施工範圍一致性。</p>
+                    </div>
+                </section>
+
+                <!-- 差異對照明細（三） -->
+                <section id="diff-window" class="scroll-mt-36 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-slate-800 text-white px-4 py-2.5 flex justify-between items-center text-xs md:text-sm">
+                        <span class="font-bold">(三) 門窗規格與玻璃顏色調整</span>
+                        <span class="bg-slate-700 px-2 py-0.5 rounded text-[11px]">附件二 第2頁</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                        <div class="p-4 bg-slate-50/50">
+                            <span class="block text-xs font-bold text-slate-400 mb-2">原審閱本條文</span>
+                            <div class="contract-text text-slate-600 text-sm">
+                                <span class="diff-del">一、一樓店舖：強化玻璃大門、電動快速捲門。</span><br>
+                                五、窗戶：採日本不二鋁窗及三合一通風門... 遮音性並使用<span class="diff-del">5mm 清玻+Low-E+5mm茶色強化膠合玻璃。</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <span class="block text-xs font-bold text-blue-600 mb-2">■ 最終簽訂條文</span>
+                            <div class="contract-text text-slate-800 text-sm">
+                                <span class="diff-ins">一、一樓店舖：電動快速捲門。</span><br>
+                                五、窗戶：採日本不二鋁窗及三合一通風門... 遮音性並使用<span class="diff-ins">5mm+Low-E +5mm強化膠合玻璃。</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50/70 px-4 py-2.5 border-t border-slate-200 text-xs text-amber-800 flex items-start gap-2">
+                        <span class="bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded scale-90">事由</span>
+                        <div class="font-medium">
+                            1. 店鋪取消強化玻璃大門。<br>
+                            2. 原茶色玻璃未達綠建築標章室內透光率標準，故取消顏色標示改為高透光強化規格。
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 差異對照明細（四） -->
+                <section id="diff-interior" class="scroll-mt-36 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-slate-800 text-white px-4 py-2.5 flex justify-between items-center text-xs md:text-sm">
+                        <span class="font-bold">(四) 室內裝修地板與灌漿輕質隔間</span>
+                        <span class="bg-slate-700 px-2 py-0.5 rounded text-[11px]">附件二 第3頁</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                        <div class="p-4 bg-slate-50/50">
+                            <span class="block text-xs font-bold text-slate-400 mb-2">原審閱本條文</span>
+                            <div class="contract-text text-slate-600 text-sm border-b border-dashed border-slate-200 pb-2 mb-2">
+                                <span class="diff-del">一、一樓店鋪、客廳、餐廳、臥室：地面鋪設樂邁LAMETT石晶地板。(客變階段以客製化方式選用...)</span>
+                            </div>
+                            <div class="contract-text text-slate-600 text-sm">
+                                二、浴廁：地坪採用<span class="diff-del">30cm×30cm RAK、ROMAN</span>止滑磁磚... 牆面採用<span class="diff-del">60cm 120cm RAK、ROMAN</span>磁磚...<br>
+                                三、內牆：<span class="diff-del">室內隔間採用輕質系統磚施作</span>後刷乳膠漆。
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <span class="block text-xs font-bold text-blue-600 mb-2">■ 最終簽訂條文</span>
+                            <div class="contract-text text-slate-800 text-sm border-b border-dashed border-slate-200 pb-2 mb-2">
+                                <span class="diff-ins">一、一樓店鋪地面鋪設80cm*80cm拋光石英磚。住家客廳、餐廳、臥室：地面鋪設樂邁LAMETT石晶地板。</span>(客變階段以客製化方式選用...)
+                            </div>
+                            <div class="contract-text text-slate-800 text-sm">
+                                二、浴廁：地坪採用<span class="diff-ins">30cm×30cm 冠軍、RAK、ROMAN</span>止滑磁磚... 牆面採用<span class="diff-ins">60cm×120cm 冠軍、RAK、ROMAN磁磚搭配高級進口花磚</span>拼貼。<br>
+                                三、內牆：<span class="diff-ins">室內隔間採用濕式灌漿輕質隔間</span>施作後刷乳膠漆。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50/70 px-4 py-2.5 border-t border-slate-200 text-xs text-amber-800 flex items-start gap-2">
+                        <span class="bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded scale-90">事由</span>
+                        <div class="font-medium">
+                            1. 店鋪改為實用度更高之大尺寸拋光石英磚施作。<br>
+                            2. 浴廁磁磚品牌全面升級加入國產大廠「冠軍磁磚」。<br>
+                            3. 室內隔間提升為濕式灌漿隔間，強化隔音及吊掛結構強度。
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 差異對照明細（五） -->
+                <section id="diff-balcony" class="scroll-mt-36 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-slate-800 text-white px-4 py-2.5 flex justify-between items-center text-xs md:text-sm">
+                        <span class="font-bold">(五) 陽台規劃及止滑磚尺寸</span>
+                        <span class="bg-slate-700 px-2 py-0.5 rounded text-[11px]">附件二 第4頁</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                        <div class="p-4 bg-slate-50/50">
+                            <span class="block text-xs font-bold text-slate-400 mb-2">原審閱本條文</span>
+                            <div class="contract-text text-slate-600 text-sm">
+                                一、地坪採用 <span class="diff-del">30cm×30cm</span> 止滑磁磚及抿石子，平頂採用鋁企口天花板，並統一加裝LED 崁燈。
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <span class="block text-xs font-bold text-blue-600 mb-2">■ 最終簽訂條文</span>
+                            <div class="contract-text text-slate-800 text-sm">
+                                一、地坪採用 <span class="diff-ins">20cm×20cm</span> 止滑磁磚及抿石子，平頂採用鋁企口天花板，並統一加裝LED 崁燈。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50/70 px-4 py-2.5 border-t border-slate-200 text-xs text-amber-800 flex items-start gap-2">
+                        <span class="bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded scale-90">事由</span>
+                        <p class="font-medium">同現場樣品屋規格實體施作，避免尺寸認知爭議。</p>
+                    </div>
+                </section>
+
+                <!-- 差異對照明細（六） -->
+                <section id="diff-plumbing" class="scroll-mt-36 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-slate-800 text-white px-4 py-2.5 flex justify-between items-center text-xs md:text-sm">
+                        <span class="font-bold">(六) 給水、排水系統不銹鋼管全面升級對照</span>
+                        <span class="bg-slate-700 px-2 py-0.5 rounded text-[11px]">附件二 第4-5頁</span>
+                    </div>
+                    <div class="p-4 bg-slate-50 text-xs text-slate-500 border-b border-slate-200">
+                        💡 本項條文較長，雙方已將原第四、五款冷熱水管分開載明的規格，於最終簽約時合併升級為全面不銹鋼管施工。
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                        <div class="p-4 bg-slate-50/50">
+                            <span class="block text-xs font-bold text-slate-400 mb-2">原審閱本條文</span>
+                            <div class="contract-text text-slate-600 text-xs leading-relaxed">
+                                三、污排水管皆採PVC管...<span class="diff-del">加入STUDOR P.A.P.A正壓調節器吸氣閥或同等品並附防臭存水彎頭。</span><br>
+                                <span class="diff-del">四、各戶戶內冷水管採用南亞正字標記 PVC管。<br>
+                                五、各戶熱水管採用不銹鋼管保溫披覆。</span><br>
+                                十、排水通氣...：<span class="diff-del">加入正壓調節器杜絕病媒，有效平衡排水時產生的正壓...</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <span class="block text-xs font-bold text-blue-600 mb-2">■ 最終簽訂條文</span>
+                            <div class="contract-text text-slate-800 text-xs leading-relaxed">
+                                三、污排水管皆採PVC管...<span class="diff-ins">附總存水彎。</span><br>
+                                四、各戶<span class="diff-ins">冷熱水管皆採用不銹鋼管</span>，熱水管加保溫披覆。<br>
+                                九、排水通氣正負壓防疫系統：<span class="diff-ins">加入STUDOR P.A.P.A正壓調節器</span>，有效平衡排水時產生的正壓，避免穢氣亂竄。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50/70 px-4 py-2.5 border-t border-slate-200 text-xs text-amber-800 flex items-start gap-2">
+                        <span class="bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded scale-90">事由</span>
+                        <div class="font-medium">
+                            1. 修正條文架構，將 STUDOR P.A.P.A 正壓調節器整合併入同款說明，並標示總存水彎品項。<br>
+                            2. <strong>建材規格大升級：</strong>原冷水管採南亞PVC管，全面升級為醫療級不銹鋼管施作，延長管線壽命與用水安全。
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 差異對照明細（七） -->
+                <section id="diff-security" class="scroll-mt-36 bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="bg-slate-800 text-white px-4 py-2.5 flex justify-between items-center text-xs md:text-sm">
+                        <span class="font-bold">(七) 安全管理對講機系統調整</span>
+                        <span class="bg-slate-700 px-2 py-0.5 rounded text-[11px]">附件二 第6頁</span>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+                        <div class="p-4 bg-slate-50/50">
+                            <span class="block text-xs font-bold text-slate-400 mb-2">原審閱本條文</span>
+                            <div class="contract-text text-slate-600 text-sm">
+                                四、各戶室內設置<span class="diff-del">威盛VIA 對講機系統</span>，結合影像、對講...<br>
+                                <span class="diff-del">五、廚房內設有火災警報偵測器，24小時監控，並可將訊號送到管理中心...</span>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <span class="block text-xs font-bold text-blue-600 mb-2">■ 最終簽訂條文</span>
+                            <div class="contract-text text-slate-800 text-sm">
+                                四、各戶室內設置<span class="diff-ins">彩色影像對講機</span>，結合影像、對講...<br>
+                                <span class="diff-ins">五、住宅大門及露台戶落地門窗設有隱藏式磁簧。</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50/70 px-4 py-2.5 border-t border-slate-200 text-xs text-amber-800 flex items-start gap-2">
+                        <span class="bg-amber-600 text-white font-bold px-1.5 py-0.5 rounded scale-90">事由</span>
+                        <div class="font-medium">
+                            1. 考量高端對講機市售品牌售價與系統相容性，取消指定特定單一廠牌標示，避免斷貨或哄抬。<br>
+                            2. 原第五款（廚房火災警報偵測器）直接移撥併入專屬之消防安全設備專章條文合併解釋。
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+
+            <!-- ======================================================= -->
+            <!-- TAB 2: 土地預定買賣契約書 -->
+            <!-- ======================================================= -->
+            <div id="land-tab" class="tab-content space-y-8">
+                <div class="border-b-2 border-slate-100 pb-4">
+                    <h2 class="text-2xl font-bold text-slate-800">土地預定買賣契約書</h2>
+                    <p class="text-slate-500 mt-1 text-xs">立契約書人：買方（以下簡稱買方）/ 土地所有權人暨相對應地主（以下簡稱賣方）</p>
+                </div>
+
+                <!-- 土地第一條 -->
+                <section id="l-review" class="scroll-mt-36">
+                    <h3 class="text-base font-bold text-slate-900 border-l-4 border-emerald-600 pl-2 mb-3">第一條：契約審閱權限</h3>
+                    <div class="contract-text text-slate-700 bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        買方於簽訂本土地契約前，確已攜回合約審閱達五日以上，對土地座落持分、公共設施產權分配及土地增值稅負擔比例，均已完全充分明瞭認可。
+                    </div>
+                </section>
+
+                <!-- 土地第二條 -->
+                <section id="l-prop" class="scroll-mt-36">
+                    <h3 class="text-base font-bold text-slate-900 border-l-4 border-emerald-600 pl-2 mb-3">第二條：土地預定買賣標示</h3>
+                    <div class="contract-text text-slate-700 space-y-2">
+                        <p>買方預購坐落於<span class="font-semibold text-slate-800">新北市泰山區信華段五小段43地號等12筆土地</span>上之本社區特定建築物相對應之土地持分權利範圍。</p>
+                        <p>各戶確切分配之土地持分總面積，依地政機關編訂之信華段地號及主管機關核發之建築執照所載基準比例為計算依據。</p>
+                    </div>
+                </section>
+
+                <!-- 土地第三條 -->
+                <section id="l-area" class="scroll-mt-36">
+                    <h3 class="text-base font-bold text-slate-900 border-l-4 border-emerald-600 pl-2 mb-3">第三條：地籍重測與土地面積變更</h3>
+                    <div class="contract-text text-slate-700">
+                        本買賣土地面積以地政機關簿籍登載為準。若因地政主管機關辦理土地分割、合併或地籍圖重測致土地面積發生增減時，雙方合意依房地總價款及本契約相關規定計算相互補償金額。
+                    </div>
+                </section>
+
+                <!-- 土地合約變更區 -->
+                <section id="l-diff" class="scroll-mt-36 pt-4">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-emerald-800 text-white px-4 py-2.5 font-bold text-sm">
+                            🛠️ 0813土地合約持有人變更差異化對照說明
+                        </div>
+                        <div class="p-4 space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="bg-slate-100 p-3 rounded-lg">
+                                    <span class="block text-xs font-bold text-slate-500 mb-1">原合約載明形式</span>
+                                    <p class="contract-text text-slate-600 text-sm">
+                                        原土地合約內，賣方欄位共完整載明 <span class="diff-del font-semibold">七位土地持有人（暨全體原始地主）</span>。
+                                    </p>
+                                </div>
+                                <div class="bg-white p-3 rounded-lg border border-emerald-100">
+                                    <span class="block text-xs font-bold text-emerald-600 mb-1">修正後最終形式</span>
+                                    <p class="contract-text text-slate-800 text-sm">
+                                        修正後改為 <span class="diff-ins font-semibold">指定單一人（暨該購買戶別之相對應對等持分地主）</span>。
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="border-t border-emerald-100 pt-3 text-xs text-emerald-800 leading-relaxed">
+                                <strong>💡 土地變更事由與重要說明：</strong><br>
+                                1. 簡化未來分戶產權移轉、地政過戶登記時的作業程序與印鑑證明申辦流程。<br>
+                                2. 因應政府最新房地合一稅務調整，精算修正房土價金分配比例，此項內部變更<strong>完全不影響買方之實質購屋權益與總價款</strong>。
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 底部版權 -->
+    <footer class="mt-12 bg-slate-900 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="text-slate-300 font-semibold">『閱讀台灣』房屋及土地預定買賣契約審閱平台</p>
+            <p>本文件已完美整合「紙本審閱本契約」與「0813差異化修正清單」，程式碼採用單一 HTML 與靜態 JS 引擎，完全契合 GitHub Pages 託管要求。</p>
+            <p class="text-slate-500">© 2026 產權與工程變更核對系統. 條文最終解釋權悉依買賣雙方正式蓋章之紙本契約書為依據。</p>
+        </div>
+    </footer>
+
+    <!-- 核心動態交互邏輯 (純 Vanilla JS，無任何外部相依) -->
+    <script>
+        // 1. 頁籤切換邏輯
+        function switchTab(tabId, btnElement) {
+            // 隱藏所有 tab 內容
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // 顯示當前點擊的 tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // 更新按鈕樣式
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('border-blue-500', 'text-white', 'bg-slate-900/50');
+                btn.classList.add('border-transparent', 'text-slate-400');
+            });
+            
+            btnElement.classList.add('border-blue-500', 'text-white', 'bg-slate-900/50');
+            btnElement.classList.remove('border-transparent', 'text-slate-400');
+
+            // 聯動切換側邊欄目錄 (TOC)
+            const houseToc = document.getElementById('house-toc');
+            const landToc = document.getElementById('land-toc');
+            if (tabId === 'house-tab') {
+                houseToc.classList.remove('hidden');
+                landToc.classList.add('hidden');
+            } else {
+                houseToc.classList.add('hidden');
+                landToc.classList.remove('hidden');
+            }
+        }
+
+        // 2. 字型縮放大小控制
+        let currentZoom = 100;
+        function changeFontSize(direction) {
+            currentZoom += direction * 5;
+            if (currentZoom < 85) currentZoom = 85;
+            if (currentZoom > 130) currentZoom = 130;
+            document.body.style.fontSize = currentZoom + '%';
+        }
+        function resetFontSize() {
+            currentZoom = 100;
+            document.body.style.fontSize = '100%';
+        }
+
+        // 3. 內建智慧搜尋引擎 (能在當前可見的 Tab 中尋找並高亮，找不到時會提示切換分頁)
+        function performSearch() {
+            const keyword = document.getElementById('searchInput').value.trim();
+            const activeTab = document.querySelector('.tab-content.active');
+            const inactiveTab = document.querySelector('.tab-content:not(.active)');
+            const alertBanner = document.getElementById('searchAlert');
+            
+            // 清除之前的搜尋高亮
+            removeHighlights(document.body);
+            alertBanner.classList.add('hidden');
+
+            if (!keyword) return;
+
+            // 先在當前分頁找
+            let activeTabHTML = activeTab.innerHTML;
+            let foundInActive = activeTabHTML.includes(keyword);
+
+            if (foundInActive) {
+                // 利用正規表達式排除 HTML 標籤，只高亮純文字部分
+                highlightKeyword(activeTab, keyword);
+                
+                // 捲動到第一個找到的高亮點
+                const firstMatch = activeTab.querySelector('.search-highlight');
+                if (firstMatch) {
+                    firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else {
+                // 當前分頁找不到，去另一個分頁查查
+                if (inactiveTab.innerHTML.includes(keyword)) {
+                    alertBanner.classList.remove('hidden');
+                } else {
+                    alert('抱歉，在房屋與土地契約中皆未找到關鍵字：' + keyword);
+                }
+            }
+        }
+
+        function highlightKeyword(element, keyword) {
+            const regex = new RegExp('(' + escapeRegExp(keyword) + ')', 'gi');
+            
+            function walk(node) {
+                if (node.nodeType === 3) { // Text node
+                    const text = node.nodeValue;
+                    if (regex.test(text)) {
+                        const span = document.createElement('span');
+                        span.innerHTML = text.replace(regex, '<span class="search-highlight">$1</span>');
+                        node.parentNode.replaceChild(span, node);
+                    }
+                } else if (node.nodeType === 1 && node.childNodes && !/(style|script)/i.test(node.tagName)) {
+                    for (let i = 0; i < node.childNodes.length; i++) {
+                        walk(node.childNodes[i]);
+                    }
+                }
+            }
+            walk(element);
+        }
+
+        function removeHighlights(element) {
+            const highlights = element.querySelectorAll('.search-highlight');
+            highlights.forEach(hl => {
+                const parent = hl.parentNode;
+                parent.replaceChild(document.createTextNode(hl.textContent), hl);
+                parent.normalize(); // 合併相鄰的文字節點
+            });
+        }
+
+        function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\]/g, '\$&');
+        }
+
+        // 綁定 Enter 鍵快速搜尋
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>
